@@ -1,0 +1,21 @@
+extends layout.pug
+
+block content
+    div.auth
+            div.form
+                form(action="/login", method="post")
+                    if errors
+                        div.alert.alert-danger(role="alert") #{errors}
+                    
+                    div.form-group
+                        label(for="username") Email Address
+                        input#username.form-control.form-control-lg(type="text", name="username")
+                        
+                    div.form-group
+                        label(for="password") Password
+                        input#password.form-control.form-control-lg(type="text", name="username")
+
+                    button.btn.btn-primary(type="submit") Submit   
+
+                    p.register-now
+                        a(href="/register") Register    

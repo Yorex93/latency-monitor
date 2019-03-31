@@ -1,0 +1,43 @@
+{
+  "name": "latency-monitor",
+  "version": "1.0.0",
+  "description": "Applicztion for monitoring latency across services",
+  "main": "./src/index.js",
+  "scripts": {
+    "test": "mocha ./src/**/**.spec.js",
+    "dev": "nodemon ./src/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Yorex93/latency-monitor.git"
+  },
+  "author": "Emmanuel Igbodudu",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Yorex93/latency-monitor/issues"
+  },
+  "homepage": "https://github.com/Yorex93/latency-monitor#readme",
+  "dependencies": {
+    "@types/express": "^4.16.1",
+    "@types/mongoose": "^5.3.24",
+    "bcryptjs": "^2.4.3",
+    "body-parser": "^1.18.3",
+    "chai": "^4.2.0",
+    "dotenv": "^7.0.0",
+    "express": "^4.16.4",
+    "express-jwt": "^5.3.1",
+    "express-session": "^1.15.6",
+    "joi": "^14.3.1",
+    "jsonwebtoken": "^8.5.1",
+    "mocha": "^6.0.2",
+    "mongoose": "^5.4.20",
+    "morgan": "^1.9.1",
+    "nodemon": "^1.18.10",
+    "passport": "^0.4.0",
+    "passport-local": "^1.0.0",
+    "pug": "^2.0.3",
+    "sinon": "^7.3.1",
+    "supertest": "^4.0.2",
+    "typescript": "^3.4.1"
+  }
+}

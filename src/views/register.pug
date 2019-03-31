@@ -1,0 +1,39 @@
+extends layout.pug
+
+block content
+    div.auth
+            div.form
+                h2= 'Register'
+                form(action="/register", method="post")
+                    if errors
+                        div.alert.alert-danger(role="alert") 
+                            for error in errors
+                                span= error.message
+                    if success
+                        div.alert.alert-success(role="alert") User Registration Successful
+
+                    else
+                        div.form-group
+                            label(for="email") Email Address
+                            input#username.form-control(type="email", name="email", value=`${oldValues ? (oldValues.email || '') : ''}`)
+
+                        div.form-group
+                            label(for="firstName") First Name
+                            input#firstName.form-control(type="text", name="firstName", value=`${oldValues ? (oldValues.firstName || '') : ''}`)   
+
+                        div.form-group
+                            label(for="lastName") Last Name
+                            input#lastName.form-control(type="text", name="lastName", value=`${oldValues ? (oldValues.lastName || '') : ''}`)         
+                            
+                        div.form-group
+                            label(for="password") Password
+                            input#password.form-control(type="password", name="password", value=`${oldValues ? (oldValues.password || '') : ''}`)
+
+                        div.form-group
+                            label(for="passwordConfirm") Confirm Password
+                            input#password.form-control(type="password", name="passwordConfirm", value=`${oldValues ? (oldValues.passwordConfirm || '') : ''}`)    
+
+                        button.btn.btn-primary(type="submit") Submit   
+
+                    p.register-now
+                        a(href="/login") Login    
