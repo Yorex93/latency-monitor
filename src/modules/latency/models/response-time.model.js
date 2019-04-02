@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 
-let RequestTime = new Schema({
+let ResponseTime = new Schema({
     dataReceived: String,
     elapsedTime: Number,
     timings: {
@@ -38,4 +38,4 @@ let RequestTime = new Schema({
 });
 
 
-module.exports = mongoose.model('RequestTime', RequestTime);
+module.exports = mongoose.model('ResponseTime', ResponseTime);

@@ -1,0 +1,30 @@
+extends ../layouts/authenticated.pug
+block content
+    .container
+        .row
+            .col-md-12
+                a.primary(href="/service-watcher/new") Add New
+                if(services.length > 0)
+                    table.table.table-striped
+                        thead
+                            tr
+                                th(scope='col') #
+                                th(scope='col') Service Name
+                                th(scope='col') Service Endpoint
+                                th(scope='col') Avrg Response Time (ms)
+                                th(scope='col') Min Response Time (ms)
+                                th(scope='col') Max Response Time (ms)
+                                th(scope='col') Actions
+                        tbody
+                            each service, index in services
+                                tr
+                                    th(scope='row') #{index + 1} 
+                                    td #{service.name}
+                                    td #{service.endPoint}
+                                    td #{service.avrgResponseTime}
+                                    td #{service.minResponseTime}
+                                    td #{service.maxResponseTime}
+                                    td 
+                                        a(href=`/service-watcher/${service._id}/details`) view
+                else
+                    span No Watched Services               

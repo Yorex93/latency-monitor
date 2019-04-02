@@ -4,16 +4,14 @@ block content
     div.auth
             div.form
                 form(action="/login", method="post")
-                    if errors
-                        div.alert.alert-danger(role="alert") #{errors}
-                    
+                    include partials/messages                    
                     div.form-group
                         label(for="username") Email Address
-                        input#username.form-control.form-control-lg(type="text", name="username")
+                        input#username.form-control.form-control-lg(type="text", name="username" required, value=`${oldValues ? (oldValues.username || '') : ''}`)
                         
                     div.form-group
                         label(for="password") Password
-                        input#password.form-control.form-control-lg(type="text", name="username")
+                        input#password.form-control.form-control-lg(type="password", name="password" required, value=`${oldValues ? (oldValues.password || '') : ''}`)
 
                     button.btn.btn-primary(type="submit") Submit   
 

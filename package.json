@@ -5,7 +5,12 @@
   "main": "./src/index.js",
   "scripts": {
     "test": "mocha ./src/**/**.spec.js",
-    "dev": "nodemon ./src/index.js"
+    "dev": "nodemon ./src/index.js",
+    "start": "pm2 start ./src/index.js",
+    "stop": "pm2 stop index",
+    "status": "pm2 show index",
+    "logs": "pm2 logs index",
+    "monitor": "pm2 monit"
   },
   "repository": {
     "type": "git",
@@ -23,6 +28,7 @@
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.18.3",
     "chai": "^4.2.0",
+    "connect-flash": "^0.1.1",
     "dotenv": "^7.0.0",
     "express": "^4.16.4",
     "express-jwt": "^5.3.1",
@@ -35,7 +41,9 @@
     "nodemon": "^1.18.10",
     "passport": "^0.4.0",
     "passport-local": "^1.0.0",
+    "pm2": "^3.4.1",
     "pug": "^2.0.3",
+    "request": "^2.88.0",
     "sinon": "^7.3.1",
     "supertest": "^4.0.2",
     "typescript": "^3.4.1"

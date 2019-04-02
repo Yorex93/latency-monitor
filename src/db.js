@@ -1,11 +1,10 @@
 const mongoose = require('mongoose');
-require('dotenv').config();
-
+const config = require('./config');
 const User = require('./modules/users/user.model');
 const WatchedService = require('./modules/latency/models/wactched-services.model');
-const RequestTime = require('./modules/latency/models/request-time.model');
+const ResponseTime = require('./modules/latency/models/response-time.model');
 
-const connectionString = process.env.MONGODB_URI;
+const connectionString = config.mongo.connectString;
 mongoose.connect(connectionString, { useCreateIndex: true, useNewUrlParser: true }).then(resp => {
 
 }).catch(err => {
@@ -15,5 +14,5 @@ mongoose.connect(connectionString, { useCreateIndex: true, useNewUrlParser: true
 mongoose.Promise = global.Promise;
 
 module.exports = {
-    User, WatchedService, RequestTime
+    User, WatchedService, ResponseTime
 }

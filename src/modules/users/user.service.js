@@ -10,23 +10,26 @@ const User = db.User;
 
 
 async function authenticate(username, password) {
-
-    console.log(username, password)
     const user = await User.findOne({ email: username });
     if(!user){
-        return Promise.reject("Username or password incorrect");
+        return Promise.reject("User does not exist");
     }
     const isPassword = await bcrypt.compare(password, user.passwordHash);
     if(!isPassword){
         return Promise.reject("Username or password incorrect");
     }
 
-    const { passwordHash, ...withoutHash } = user;
-    return Promise.resolve(withoutHash);
+    const userObj = { 
+        _id: user._id,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        email: user.email
+    };
+    return Promise.resolve(userObj);
 }
 
 async function getById(id) {
-    return await User.findById(id).select('-hash');
+    return await User.findById(id).select('-passwordHash');
 }
 
 async function getByUsername(username) {
@@ -37,7 +40,6 @@ async function create(userCreateRequest) {
     if (await User.findOne({ email: userCreateRequest.email })) {
         return Promise.reject(new ApiError('Email "' + userCreateRequest.email + '" is already registered'));
     }
-    console.log(userCreateRequest);
     const user = new User({
         firstName: userCreateRequest.firstName,
         lastName: userCreateRequest.lastName,

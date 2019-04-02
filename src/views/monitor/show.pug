@@ -1,0 +1,34 @@
+extends ../layouts/authenticated.pug
+block content
+    .container
+        .row
+            .col-md-12
+                a.primary(href="/service-watcher") Back to List
+                if(service)
+                    h1 #{service.name}
+                    h3 #{service.endPoint}
+                    table.table.table-striped
+                        thead
+                            tr
+                                th(scope='col') #
+                                th(scope='col') Elapsed Time
+                                th(scope='col') Wait (ms)
+                                th(scope='col') DNS (ms)
+                                th(scope='col') TCP (ms)
+                                th(scope='col') TTFB (ms)
+                                th(scope='col') Download (ms)
+                                th(scope='col') Total (ms)
+                                th(scope='col') Checked on
+                        tbody
+                            each time, index in service.responseTimes
+                                tr
+                                    th(scope='row') #{index + 1} 
+                                    td #{time.elapsedTime}
+                                    td #{time.timingPhases.wait}
+                                    td #{time.timingPhases.dns}
+                                    td #{time.timingPhases.tcp}
+                                    td #{time.timingPhases.firstByte}
+                                    td #{time.timingPhases.download}
+                                    td #{time.timingPhases.total}
+                                    td #{time.createdAt}
+                                               

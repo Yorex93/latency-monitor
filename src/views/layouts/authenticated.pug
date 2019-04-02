@@ -1,0 +1,34 @@
+html(lang="en")
+    head
+        meta(charset="UTF-8")
+        meta(name="viewport", content="width=device-width, initial-scale=1.0")
+        meta(http-equiv="X-UA-Compatible", content="ie=edge")
+        title Latency Monitor
+        link(rel="stylesheet", href="../../assets/styles/bootstrap.min.css")
+        link(rel="stylesheet", href="https://fonts.googleapis.com/css?family=Montserrat:400,700")
+        link(rel="stylesheet", href="../../assets/styles/styles.css")
+    body.latency-montitor
+        nav.navbar.navbar-expand-lg.navbar-dark.bg-dark
+            .container
+                a.navbar-brand(href='#') Latency Monitor
+                button.navbar-toggler(type='button', data-toggle='collapse', data-target='#navbarSupportedContent', aria-controls='navbarSupportedContent', aria-expanded='false', aria-label='Toggle navigation')
+                    span.navbar-toggler-icon
+                #navbarSupportedContent.collapse.navbar-collapse
+                    ul.navbar-nav.mr-auto
+                        li.nav-item.active
+                            a.nav-link(href='#')
+                                | Home 
+                            span.sr-only
+                        li.nav-item.dropdown
+                            a#navbarDropdown.nav-link.dropdown-toggle(href='#', role='button', data-toggle='dropdown', aria-haspopup='true', aria-expanded='false')
+                                | Watched Services
+                            .dropdown-menu(aria-labelledby='navbarDropdown')
+                                a.dropdown-item(href='/service-watcher') View All
+                                a.dropdown-item(href='/service-watcher/new') Add New  
+                    form.form-inline.my-2.my-lg-0(method="POST", action="/logout")
+                        button.btn.btn-outline-danger.my-2.my-sm-0(type='submit') Sign Out (#{userDetails.name})
+        .content
+            block content
+
+        script(src="https://code.jquery.com/jquery-3.2.1.slim.min.js")
+        script(src="../../assets/scripts/bootstrap.min.js")           

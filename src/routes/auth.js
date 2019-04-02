@@ -1,7 +1,6 @@
 const express = require('express');
 const router = express.Router();
 const userService = require('../modules/users/user.service');
-const Joi = require('joi');
 const schemaValidator = require('../middleware/schema-validator');
 const registerSchema = require('./../validators').register;
 const loginSchema = require('./../validators').login;
@@ -27,31 +26,29 @@ module.exports = (passport) => {
         });
     })
 
-    router.post('/login', function(req, res, next) {
-        passport.authenticate('local', function(err, user, info) {
-            console.log(user);
-            if (err) { 
-              return next(err); 
+    router.post('/login', schemaValidator(loginSchema, 'login'), (req, res, next) => {
+        passport.authenticate('local', (errorMsg, user, info) => {
+            if(errorMsg){
+                res.render('login', { errorMsg, oldValues: req.body });
+            } else {
+                req.logIn(user, function(err) {
+                    if (err) { 
+                        res.render('login', { errorMsg: err, oldValues: req.body });
+                    } else {
+                        res.redirect('/service-watcher');
+                    }
+                });
             }
-            if(!user) {
-               return res.redirect('/login'); 
-            }
-            
-            req.logIn(user, function(err) {
-                if (err) { 
-                    return next(err); 
-                }
-                return res.redirect('/users/' + user.username);
-            });
         })(req, res, next);
-      });
 
-    router.post('/login', schemaValidator(loginSchema, 'login'), passport.authenticate('local', {
-        failureRedirect: '/login',
-        successRedirect: '/dashboard'
-    }), (req, res) => {
-        res.send('Logged In');
-    })
+
+    });
+
+    router.post('/logout', (req, res) => {
+        req.logout();
+        req.flash('success_msg', 'You are logged out');
+        res.redirect('/login');
+    });
 
     return router;
 }
