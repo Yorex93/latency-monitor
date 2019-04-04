@@ -10,7 +10,7 @@ const User = db.User;
 
 
 async function authenticate(username, password) {
-    const user = await User.findOne({ email: username });
+    const user = await User.findOne({ email: username.trim().toLowerCase() });
     if(!user){
         return Promise.reject("User does not exist");
     }
@@ -41,9 +41,9 @@ async function create(userCreateRequest) {
         return Promise.reject(new ApiError('Email "' + userCreateRequest.email + '" is already registered'));
     }
     const user = new User({
-        firstName: userCreateRequest.firstName,
-        lastName: userCreateRequest.lastName,
-        email: userCreateRequest.email
+        firstName: userCreateRequest.firstName.trim().toLowerCase(),
+        lastName: userCreateRequest.lastName.trim().toLowerCase(),
+        email: userCreateRequest.email.trim().toLowerCase()
     });
     user.passwordHash = bcrypt.hashSync(userCreateRequest.password, 10);
     try{
