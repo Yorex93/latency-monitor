@@ -19,8 +19,13 @@ const watchedServiceSchema = Joi.object().keys({
     name: Joi.string().required(),
 });
 
+const settingsSchema = Joi.object().keys({
+    pollingRate: Joi.number().required(),
+});
+
 module.exports = {
     register: registerSchema,
     login: loginSchema,
-    watchedService: watchedServiceSchema
+    watchedService: watchedServiceSchema,
+    settings: settingsSchema
 }

@@ -3,10 +3,10 @@ if (errors && errors.length > 0)
         for error in errors
             span= error.message
 
-if (errorMsg)
+if (errorMsg && errorMsg.length)
     div.alert.alert-danger(role="alert")
         span= errorMsg
 
-if (successMsg)
+if (successMsg && successMsg.length)
     div.alert.alert-success(role="alert")
         span= successMsg        

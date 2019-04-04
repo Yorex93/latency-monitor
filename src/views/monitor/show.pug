@@ -1,34 +1,57 @@
-extends ../layouts/authenticated.pug
+extends ../layouts/authenticated
 block content
+    include ../mixins/pagination
     .container
         .row
             .col-md-12
                 a.primary(href="/service-watcher") Back to List
                 if(service)
-                    h1 #{service.name}
-                    h3 #{service.endPoint}
-                    table.table.table-striped
-                        thead
-                            tr
-                                th(scope='col') #
-                                th(scope='col') Elapsed Time
-                                th(scope='col') Wait (ms)
-                                th(scope='col') DNS (ms)
-                                th(scope='col') TCP (ms)
-                                th(scope='col') TTFB (ms)
-                                th(scope='col') Download (ms)
-                                th(scope='col') Total (ms)
-                                th(scope='col') Checked on
-                        tbody
-                            each time, index in service.responseTimes
+                    h3 #{service.name}
+                    h5 #{service.endPoint}
+                    .table-responsive.service-details
+                        table.table.table-striped
+                            thead
                                 tr
-                                    th(scope='row') #{index + 1} 
-                                    td #{time.elapsedTime}
-                                    td #{time.timingPhases.wait}
-                                    td #{time.timingPhases.dns}
-                                    td #{time.timingPhases.tcp}
-                                    td #{time.timingPhases.firstByte}
-                                    td #{time.timingPhases.download}
-                                    td #{time.timingPhases.total}
-                                    td #{time.createdAt}
-                                               
+                                    th(scope='col') #
+                                    th(scope='col') Elapsed Time
+                                    th(scope='col') Wait (ms)
+                                    th(scope='col') DNS (ms)
+                                    th(scope='col') TCP (ms)
+                                    th(scope='col') TTFB (ms)
+                                    th(scope='col') Download (ms)
+                                    th(scope='col') Total (ms)
+                                    th(scope='col') Checked on
+                                    th(scope='col') Actions
+                            tbody
+                                each time, index in service.responseTimes
+                                    tr(id=`${time._id}`, class={error: time.error})
+                                        th(scope='row') #{index + 1 + (paginator.page * paginator.pageSize)} 
+                                        td #{time.elapsedTime.toFixed(2)}
+                                        td #{!time.error ? time.timingPhases.wait.toFixed(2) : 'N/A'}
+                                        td #{!time.error ? time.timingPhases.dns.toFixed(2) : 'N/A'}
+                                        td #{!time.error ? time.timingPhases.tcp.toFixed(2) : 'N/A'}
+                                        td #{!time.error ? time.timingPhases.firstByte.toFixed(2) : 'N/A'}
+                                        td #{!time.error ? time.timingPhases.download.toFixed(2) : 'N/A'}
+                                        td #{!time.error ? time.timingPhases.total.toFixed(2) : 'N/A'}
+                                        td #{time.createdAt.toLocaleString()}
+                                        td 
+                                            button.btn.btn-sm(href="#" onClick=`viewBody('${time._id}', '${time.createdAt.toLocaleString()}')`) Response body
+                                            .response #{time.dataReceived}
+                    +pagination(paginator.page, paginator.pageSize, paginator.totalElements, paginator.pages)
+
+    #responseBody.modal.fade(tabindex='-1', role='dialog', aria-labelledby='responseBody', aria-hidden='true')
+        .modal-dialog.modal-dialog-scrollable.modal-lg(role='document')
+            .modal-content
+                .modal-header
+                    h6.responseBodyTitle.modal-title
+                    button.close(type='button', data-dismiss='modal', aria-label='Close')
+                    span(aria-hidden='true') ×
+                .modal-body
+
+    block scripts
+        script.
+            function viewBody(id, timeReceived){
+                $('#responseBody .modal-body').text($(`tr#${id} .response`).html());
+                $('#responseBody .responseBodyTitle').text(`Response body received at ${timeReceived}`);
+                $('#responseBody').modal('show');
+            }       

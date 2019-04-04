@@ -4,31 +4,45 @@ html(lang="en")
         meta(name="viewport", content="width=device-width, initial-scale=1.0")
         meta(http-equiv="X-UA-Compatible", content="ie=edge")
         title Latency Monitor
-        link(rel="stylesheet", href="../../assets/styles/bootstrap.min.css")
+        link(rel="stylesheet", href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css")
         link(rel="stylesheet", href="https://fonts.googleapis.com/css?family=Montserrat:400,700")
+        link(rel="stylesheet", href="https://use.fontawesome.com/releases/v5.8.1/css/all.css")
         link(rel="stylesheet", href="../../assets/styles/styles.css")
     body.latency-montitor
         nav.navbar.navbar-expand-lg.navbar-dark.bg-dark
             .container
-                a.navbar-brand(href='#') Latency Monitor
+                a.navbar-brand(href='/service-watcher') Latency Monitor
                 button.navbar-toggler(type='button', data-toggle='collapse', data-target='#navbarSupportedContent', aria-controls='navbarSupportedContent', aria-expanded='false', aria-label='Toggle navigation')
                     span.navbar-toggler-icon
                 #navbarSupportedContent.collapse.navbar-collapse
                     ul.navbar-nav.mr-auto
-                        li.nav-item.active
-                            a.nav-link(href='#')
-                                | Home 
-                            span.sr-only
                         li.nav-item.dropdown
                             a#navbarDropdown.nav-link.dropdown-toggle(href='#', role='button', data-toggle='dropdown', aria-haspopup='true', aria-expanded='false')
                                 | Watched Services
                             .dropdown-menu(aria-labelledby='navbarDropdown')
                                 a.dropdown-item(href='/service-watcher') View All
                                 a.dropdown-item(href='/service-watcher/new') Add New  
+                                a.dropdown-item(href='/service-watcher/settings') Settings 
+                    if(serviceState.isRunning)            
+                        form.form-inline.mr-2.my-lg-0(method="POST", action="/service-watcher/monitoring/stop")
+                            span.service-status.mr-2.running Running
+                            button.btn.btn-outline-danger.btn-sm.my-2.my-sm-0(type='submit') Stop
+                    else
+                        form.form-inline.mr-2.my-lg-0(method="POST", action="/service-watcher/monitoring/start")
+                            span.service-status.mr-2.stopped Stopped
+                            button.btn.btn-outline-success.btn-sm.my-2.my-sm-0(type='submit') Start        
+
                     form.form-inline.my-2.my-lg-0(method="POST", action="/logout")
-                        button.btn.btn-outline-danger.my-2.my-sm-0(type='submit') Sign Out (#{userDetails.name})
+                        button.btn.btn-outline-danger.btn-sm.my-2.my-sm-0(type='submit') Sign Out (#{userDetails.name})
         .content
             block content
 
         script(src="https://code.jquery.com/jquery-3.2.1.slim.min.js")
-        script(src="../../assets/scripts/bootstrap.min.js")           
+        script(src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js")
+        script(src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js")
+        block scripts
+        script.
+            $(function () {
+                $('[data-toggle="tooltip"]').tooltip()
+            })        
+               

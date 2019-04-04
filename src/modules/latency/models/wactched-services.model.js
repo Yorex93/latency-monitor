@@ -6,10 +6,13 @@ const ResponseTime = require('./response-time.model');
 
 let WatchedServiceSchema = new Schema({
     name: {
-        type: String, required: true, max: 256
+        type: String, 
+        required: true, 
+        max: 256
     },
     endPoint: {
-        type: String, required: true
+        type: String, 
+        required: true
     },
     avrgResponseTime: {
         type: Number,
@@ -20,6 +23,18 @@ let WatchedServiceSchema = new Schema({
         default: 0
     },
     maxResponseTime: {
+        type: Number,
+        default: 0
+    },
+    active: {
+        type: Boolean,
+        default: true
+    },
+    successResponseCount: {
+        type: Number,
+        default: 0
+    },
+    failureResponseCount: {
         type: Number,
         default: 0
     },

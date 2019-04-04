@@ -3,28 +3,40 @@ block content
     .container
         .row
             .col-md-12
-                a.primary(href="/service-watcher/new") Add New
+                a.primary.btn.btn-primary.btn-sm.mb-3(href="/service-watcher/new") Add New
+                include ../partials/messages.pug
                 if(services.length > 0)
-                    table.table.table-striped
-                        thead
-                            tr
-                                th(scope='col') #
-                                th(scope='col') Service Name
-                                th(scope='col') Service Endpoint
-                                th(scope='col') Avrg Response Time (ms)
-                                th(scope='col') Min Response Time (ms)
-                                th(scope='col') Max Response Time (ms)
-                                th(scope='col') Actions
-                        tbody
-                            each service, index in services
+                    .table-responsive
+                        table.table.table-striped.watched-service-table
+                            thead
                                 tr
-                                    th(scope='row') #{index + 1} 
-                                    td #{service.name}
-                                    td #{service.endPoint}
-                                    td #{service.avrgResponseTime}
-                                    td #{service.minResponseTime}
-                                    td #{service.maxResponseTime}
-                                    td 
-                                        a(href=`/service-watcher/${service._id}/details`) view
+                                    th(scope='col') #
+                                    th(scope='col') Name
+                                    th(scope='col') Endpoint
+                                    th(scope='col') Avrg Response (ms)
+                                    th(scope='col') Min Response (ms)
+                                    th(scope='col') Max Response (ms)
+                                    th(scope='col') Actions
+                                    th(scope='col') Status
+                            tbody
+                                each service, index in services
+                                    tr(class=`service-${service._id}`)
+                                        th(scope='row') #{index + 1} 
+                                        td #{service.name}
+                                        td #{service.endPoint}
+                                        td #{service.avrgResponseTime.toFixed(2)}
+                                        td #{service.minResponseTime.toFixed(2)}
+                                        td #{service.maxResponseTime.toFixed(2)}
+                                        td.service-actions
+                                            form(method="POST", action=`/service-watcher/${service._id}/${service.active ? 'deactivate' : 'activate'}`)
+                                                a(href=`/service-watcher/${service._id}/details`)
+                                                    i.fas.fa-eye(data-toggle="tooltip", title="View details")
+                                                button.icon(type="submit")
+                                                    i.fas(data-toggle="tooltip", title=`${service.active ? 'Deactivate' : 'Activate'}`, class={'fa-play': !service.active} class={'fa-stop': service.active})
+                                            form(method="POST", action=`/service-watcher/${service._id}/delete`)
+                                                button.icon(type="submit")
+                                                    i.fas.fa-trash(data-toggle="tooltip", title=`Delete`)
+                                        td 
+                                            span.status(class={active: service.active} class={inactive: !service.active}, data-toggle="tooltip", title=`${service.active ? 'Actively Watching' : 'Paused'}`)   
                 else
                     span No Watched Services               

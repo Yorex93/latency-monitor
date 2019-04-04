@@ -1,0 +1,19 @@
+mixin pagination(page, pageSize, totalElements, pages)
+    nav(aria-label='Pagination')
+        ul.pagination
+            li.page-item(class={disabled: page === 0})
+                a.page-link(href=`?page=${page > 0 ? page - 1 : page}&pageSize=${pageSize}`, aria-label='Previous', disabled=`${page === 0}`)
+                    span(aria-hidden='true') «
+        
+            li.page-item
+                    a.page-link(href=`?page=${0}&pageSize=${pageSize}`) First  
+
+            li.page-item.active
+                a.page-link(href=`?page=${i + 1}&pageSize=${pageSize}`) #{(page + 1)} / #{pages}
+
+            li.page-item
+                a.page-link(href=`?page=${pages - 1}&pageSize=${pageSize}`) Last   
+
+            li.page-item(class={disabled: (page + 1) >= pages})
+                a.page-link(href=`?page=${(page + 1) < pages ? page + 1 : page}&pageSize=${pageSize}`, aria-label='Next', disabled=`${(page + 1) >= pages}`)
+                    span(aria-hidden='true') »

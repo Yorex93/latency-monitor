@@ -5,7 +5,7 @@ const passport = require('passport');
 const path = require('path');
 const flash = require('connect-flash');
 const config = require('./config');
-const processJob = require('./modules/latency/background-service');
+const backgroundService = require('./modules/latency/background-service');
 
 require('./config/passport')(passport);
 const authenticated = require('./middleware/authenticated');
@@ -33,25 +33,29 @@ app.use(flash());
 app.use(passport.initialize());
 app.use(passport.session());
 
-app.use(function(req, res, next) {
+app.use((req, res, next) => {
     if(req.user){
         res.locals.userDetails = {
             name: req.user.firstName,
             email: req.user.email
         }
+        res.locals.serviceState = {
+            isRunning: backgroundService.isRunning()
+        }
     }
+    
+    res.locals.successMsg = req.flash("success");
+    res.locals.errorMsg = req.flash("error");
     next();
 });
-
 
 app.use('/', authRoutes(passport));
 app.use('/dashboard', authenticated, dashboardRoutes);
 app.use('/service-watcher', authenticated, monitorRoutes);
 
-
-
 const port = config.app.port || 5000;
 
 app.listen(port).on("listening", () => {
-    console.log(`App running on port ${port}`)
+    console.log(`App running on port ${port}`);
+    //backgroundService.start(10000);
 });

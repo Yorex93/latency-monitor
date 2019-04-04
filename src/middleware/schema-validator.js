@@ -21,6 +21,7 @@ module.exports = (schema, render) => {
                         res.render(render, { errors: validationErrors, oldValues: data });
                     } else {
                         backURL=req.header('Referer') || '/';
+                        req.flash('errors', validationErrors);
                         res.redirect(backURL);
                     }
                 } else {

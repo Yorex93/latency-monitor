@@ -5,48 +5,46 @@ const config = require('../../config');
 const request = require('request');
 
 async function process(){
-    const watchedServices = await WatchedService.find({ }, { requestTimes: 0 });
+    const watchedServices = await WatchedService.find({ active: true }, { responseTimes: 0 });
+    console.log("Watched service count ", watchedServices.length);
     watchedServices.forEach(service => makeRequest(service));
 }
 
-async function makeRequest(serviceWithoutRequestTimes){
-    const service = await WatchedService.findById(serviceWithoutRequestTimes._id);
+async function makeRequest(service){
     return new Promise((resolve, reject) => {
-        request.get({ url: service.endPoint,  time: true }, function (err, response) {
+        let errorMsg = "";
 
-            let currentRequestTimesCount;
-
-            if(!service.requestTimes){
-                service.requestTimes = [];
-                currentRequestTimesCount = 0;
-            } else {
-                currentRequestTimesCount = service.requestTimes.length;
-            }
-
+        request.get({ url: service.endPoint,  time: true }, (err, response) => {
             if(err){
                 const responseTime = new ResponseTime({
-                    dataReceived: null,
-                    elapsedTime: null,
+                    dataReceived: "",
+                    elapsedTime: 0,
                     timings: null,
                     timingPhases: null,
                     error: true,
                     errorDescription: JSON.stringify(err)
                 });
                 WatchedService.findByIdAndUpdate(service._id, {
+                    $inc: {
+                        "failureResponseCount": 1
+                    },
                     $push: {
-                        "responseTimes": responseTime
+                        "responseTimes": { "$each": [responseTime], "$position": 0 }
                     }
                 }, 
                 {
-                    safe: true, upsert: true
+                    safe: true
                 },
                 function(err, model) {
-                    console.log(err, model);
+                    if(err){
+                        console.log(err);
+                    }
+                    
                 });
-                console.log(`Request made for APi Endpoint ${service.endPoint} with Error: ${err} `);
                 
+                errorMsg = `Request made for APi Endpoint ${service.endPoint} with Error: ${err} `;
+                reject(errorMsg);
             } else {
-
                 const responseTime = new ResponseTime({
                     dataReceived: JSON.stringify(response.body),
                     elapsedTime: response.elapsedTime,
@@ -65,27 +63,33 @@ async function makeRequest(serviceWithoutRequestTimes){
                 if((response.elapsedTime < currentMinResponseTime) || currentMinResponseTime === 0){
                     currentMinResponseTime = response.elapsedTime;
                 }
-                const newAvrg = ((currentAvgResponseTime * currentRequestTimesCount) + response.elapsedTime) / (currentRequestTimesCount + 1);
-                service.avrgResponseTime = newAvrg;
-
+            
+                const newAvrg = ((currentAvgResponseTime * service.successResponseCount) + response.elapsedTime) / (service.successResponseCount + 1);
                 WatchedService.findByIdAndUpdate(service._id, {
                     $set: {
-                        "maxResponseTime": currentMaxResponseTime,
-                        "minResponseTime": currentMinResponseTime,
-                        "avrgResponseTime": newAvrg,
+                        "maxResponseTime": Math.round(currentMaxResponseTime),
+                        "minResponseTime": Math.round(currentMinResponseTime),
+                        "avrgResponseTime": Math.round(newAvrg),
+                    },
+                    $inc:{
+                        "successResponseCount": 1
                     },
                     $push: {
-                        "responseTimes": responseTime
+                        "responseTimes": { "$each": [responseTime], "$position": 0 }
                     }
                 }, 
                 {
-                    safe: true, upsert: true
+                    safe: true
                 },
-                function(err, model) {
-                    console.log(err, model);
+                function(err) {
+                    if(err){
+                        console.log("Error occurred while updating service", err);
+                        reject(err);
+                    } else{
+                        console.log('Request made for APi Endpoint: ', service.endPoint);
+                        resolve(responseTime)
+                    }
                 });
-                console.log('Request made for APi Endpoint: ', service.endPoint);
-                resolve(responseTime)
 
             }
         });
@@ -93,11 +97,30 @@ async function makeRequest(serviceWithoutRequestTimes){
     });
 }
 
-const intervalObj = setTimeout(() => {
-    process();
-}, 1000)
+let intervalObj = null;
+
+function start(timeInMilli = config.app.defaultPollInterval || 10000){
+    console.log(`Starting Background Processing, Polling every ${timeInMilli / 1000} seconds`);
+    intervalObj = setInterval(() => {
+        process();
+    }, timeInMilli);
+}
+
+
+
+function stop(){
+    console.log("Stopping Background Processing");
+    clearInterval(intervalObj);
+    intervalObj = null;
+}
+
+function isRunning(){
+    return intervalObj !== null;
+}
+
 
 module.exports = {
-    process,
-    intervalObj
+    start,
+    stop,
+    isRunning
 }

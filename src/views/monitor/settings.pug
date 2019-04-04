@@ -1,0 +1,13 @@
+extends ../layouts/authenticated.pug
+block content
+    .container
+        .row
+            .col-md-4
+                div.form
+                    form(action=`/service-watcher/settings/${setting._id}/update`, method="post")
+                        include ../partials/messages                    
+                        div.form-group
+                            label(for="name") Polling Rate(ms)
+                            input#pollingRate.form-control.form-control-lg(type="number", name="pollingRate" required, value=`${setting.pollingRate}`)
+
+                        button.btn.btn-primary(type="submit") Submit

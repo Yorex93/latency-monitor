@@ -26,3 +26,72 @@ p.register-now{
 .content{
     padding-top: 50px;
 }
+
+.watched-service-table span{
+    width: 20px;
+    height: 20px;
+    border-radius: 20px;
+    display: block;
+}
+
+
+.watched-service-table span.active{
+    background-color: chartreuse;
+}
+
+.watched-service-table span.inactive{
+    background-color: lightgrey;
+}
+
+.service-status.running{
+    color: chartreuse !important;
+}
+
+.service-status.stopped{
+    color: crimson !important;
+}
+
+@media screen and (max-width: 768px){
+    .table-responsive{
+        overflow: scroll;
+    }
+}
+
+.table-responsive.service-details{
+    overflow: scroll;
+}
+
+.service-actions{
+    display: flex;
+}
+
+.service-actions form{
+    display: flex;
+    margin-right: 10px
+}
+
+.service-actions a{
+    margin-right: 10px;
+}
+
+.service-actions .fa-stop{
+    color: red;
+}
+
+.service-actions .fa-play{
+    color: green;
+}
+
+button.icon{
+    padding: 0;
+    -webkit-appearance: media-controls-background;
+    background: transparent;
+}
+
+.service-details .response{
+    display: none;
+}
+
+tr.error{
+    background-color: lightcoral;
+}
