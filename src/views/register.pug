@@ -3,8 +3,10 @@ extends layout.pug
 block content
     div.auth
             div.form
-                h2= 'Register'
+                .form-header
+                    h3='Latency Monitor App'
                 form(action="/register", method="post")
+                    h4= 'Register'
                     include partials/messages
                     if success
                         div.alert.alert-success(role="alert") User Registration Successful

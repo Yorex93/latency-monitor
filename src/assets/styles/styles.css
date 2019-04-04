@@ -14,9 +14,21 @@
     width: 90%;
     max-width: 400px;
     background: #FFFFFF;
-    border: 1px solid lightgrey;
     border-radius: 5px;
-    padding: 30px 20px;
+}
+
+.auth .form-header{
+    padding: 20px;
+    background-color: teal;
+    color: #FFFFFF;
+}
+
+.auth .form-header h3{
+    text-align: center;
+}
+
+.auth form{
+    padding: 20px;
 }
 
 p.register-now{

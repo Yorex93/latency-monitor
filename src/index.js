@@ -59,3 +59,5 @@ app.listen(port).on("listening", () => {
     console.log(`App running on port ${port}`);
     //backgroundService.start(10000);
 });
+
+module.exports = app;

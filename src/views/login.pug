@@ -3,7 +3,10 @@ extends layout.pug
 block content
     div.auth
             div.form
+                .form-header
+                    h3='Latency Monitor App'
                 form(action="/login", method="post")
+                    h4= 'Login'
                     include partials/messages                    
                     div.form-group
                         label(for="username") Email Address
