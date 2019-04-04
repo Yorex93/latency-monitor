@@ -6,7 +6,7 @@
   "scripts": {
     "test": "mocha ./src/**/**.spec.js",
     "dev": "nodemon ./src/index.js",
-    "start": "pm2 start ./src/index.js",
+    "start": "node ./src/index.js",
     "stop": "pm2 stop index",
     "status": "pm2 show index",
     "logs": "pm2 logs index",

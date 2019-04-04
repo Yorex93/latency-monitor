@@ -7,9 +7,9 @@ const Settings = require('./modules/latency/models/settings.model');
 
 const connectionString = config.mongo.connectString;
 mongoose.connect(connectionString, { useCreateIndex: true, useNewUrlParser: true }).then(resp => {
-
+    console.log(`Connected to mongoDB`)
 }).catch(err => {
-    console.log(`Error connecting to Mongo DB with connection string ${connectionString || null}`)
+    console.log(`Error connecting to Mongo DB with connection string`)
     process.exit()
 });
 mongoose.Promise = global.Promise;
